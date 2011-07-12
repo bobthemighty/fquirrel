@@ -1,0 +1,14 @@
+Fquirrel - a server-side jquery-tmpl in F#
+
+Roadmap
+  * Support hello world example
+  * Support html
+  * Support if
+  * Support else
+  * Support each
+  * Alpha
+  * Support Localisable strings
+  * Implement template output
+  * Beta
+  * Support method calls
+  * Support tmpl
