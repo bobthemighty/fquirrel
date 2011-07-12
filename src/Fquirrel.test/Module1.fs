@@ -7,7 +7,9 @@ open FsUnit
 open Fquirrel.Template
 open Fquirrel.Parser
 
-type Customer = {name: string; htmlText : string; isSpecial : bool}
+type Customer = {name: string; htmlText : string; isSpecial : bool; isSexy: bool}
+
+let compress (s : string) = s.Replace("\n", "").Replace("\t", "");
     
 [<TestFixture>]
 type ``Given a literal fragment`` ()=
@@ -24,7 +26,7 @@ type ``Given a template that contains a variable`` ()=
 
     [<Test>] member test.
      ``the variable is correctly output.`` ()=
-       (parse template) {name= "Bob"; htmlText = ""; isSpecial = false} 
+       (parse template) {name= "Bob"; htmlText = ""; isSpecial = false;  isSexy = true} 
         |> should equal "Hello Bob! welcome to a working example."
         
 
@@ -34,7 +36,7 @@ type ``Given a template that contains unescaped html`` ()=
 
     [<Test>] member test.
      ``the variable is correctly output.`` ()=
-       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = false} 
+       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = false; isSexy = true} 
         |> should equal "Hello <p>O HAI!</p>"
 
 [<TestFixture>]
@@ -43,7 +45,7 @@ type ``Given a template that uses html in a normal variable`` ()=
 
      [<Test>] member test.
       ``the variable is html encoded`` ()=
-        (parse template) {name = ""; htmlText = "<p> Badgers & Things</p>"; isSpecial = false} 
+        (parse template) {name = ""; htmlText = "<p> Badgers & Things</p>"; isSpecial = false; isSexy = true}  
         |> should equal "Hello &lt;p&gt; Badgers &amp; Things&lt;/p&gt;"
 
 
@@ -56,12 +58,13 @@ type ``Given a template that contains an if block`` ()=
 
     [<Test>] member test.
      ``when a customer is special, the block is output.`` ()=
-       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = true} 
+       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = true; isSexy = true}  
+        |> compress
         |> should equal "Hello <b>Bob</b><blink>You are very special!</blink>"
     
     [<Test>] member test.
      ``when a customer is not special, the block is ignored.`` ()=
-       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = false} 
+       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = false; isSexy = true}  
         |> should equal "Hello <b>Bob</b>"
 
 
@@ -74,10 +77,37 @@ type ``Given an if block that contains variables`` ()=
 
     [<Test>] member test.
      ``when a customer is special, the block is output.`` ()=
-       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = true} 
+       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = true; isSexy = true}  
         |> should equal "Hello <b>Bob</b><blink>Bob is very special!</blink>"
     
     [<Test>] member test.
      ``when a customer is not special, the block is ignored.`` ()=
-       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = false} 
+       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = false; isSexy = true} 
         |> should equal "Hello <b>Bob</b>"
+
+[<TestFixture>]
+type ``Given an if block that contains an if block`` ()=
+    let template = "Hello <b>${name}</b>\
+{{if isSpecial}}\
+ {{if isSexy}}
+<blink>That's pretty sexy, ${name}</blink>
+{{/if}}
+{{/if}}"
+
+    [<Test>] member test.
+     ``when a customer is special and sexy, the block is output.`` ()=
+       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = true; isSexy = true} 
+        |> compress
+        |> should equal "Hello <b>Bob</b><blink>That's pretty sexy, Bob</blink>"
+    
+    [<Test>] member test.
+     ``when a customer is not special, the block is ignored.`` ()=
+       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = false; isSexy = true} 
+        |> compress
+        |> should equal "Hello <b>Bob</b>"
+
+    [<Test>] member test.
+     ``when a customer is special but not sexy, the block is ignored.`` ()=
+       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = true; isSexy = false} 
+       |> compress
+       |> should equal "Hello <b>Bob</b>"
