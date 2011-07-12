@@ -7,7 +7,7 @@ module AST =
                             | Literal of string
                             | Html of string
                             | If of condBlock
-    and condBlock = {expression: string; body: parsedTemplate}
+    and condBlock = {expression: string; body: parsedTemplate list}
 
 module Template =
     open System
@@ -17,7 +17,7 @@ module Template =
     
 
     let tValue, tValueRef = createParserForwardedToRef()    
-
+    let template =     many1 (tValue)
    
 
     type UserState = unit
@@ -48,7 +48,7 @@ module Template =
 
     let ifBlock : Parser<_> =
         pipe2   (identifier |> betweenStrings "{{if " "}}")
-                (tValue .>> str "{{/if}}")
+                (template .>> str "{{/if}}") 
                 
                 (fun x y -> {expression = x; body = y}|> If)
 
@@ -61,4 +61,3 @@ module Template =
 
    
 
-    let template =     many1 (htmlFrag <|> expr <|>  ifBlock <|>literal)

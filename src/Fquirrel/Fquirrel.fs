@@ -19,7 +19,7 @@
                             | Expr s -> HttpUtility.HtmlEncode(data?(s))
                             | Literal s -> s 
                             | Html s -> data?(s)
-                            | If cb -> if( data?(cb.expression) ) then Template [cb.body] data else ""
+                            | If cb -> if( data?(cb.expression) ) then Template cb.body data else ""
                     )
                     >> List.fold( fun acc x -> acc + x) "")
 

@@ -63,3 +63,21 @@ type ``Given a template that contains an if block`` ()=
      ``when a customer is not special, the block is ignored.`` ()=
        (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = false} 
         |> should equal "Hello <b>Bob</b>"
+
+
+[<TestFixture>]
+type ``Given an if block that contains variables`` ()=
+    let template = "Hello <b>${name}</b>\
+{{if isSpecial}}\
+ <blink>${name} is very special!</blink>\
+{{/if}}"
+
+    [<Test>] member test.
+     ``when a customer is special, the block is output.`` ()=
+       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = true} 
+        |> should equal "Hello <b>Bob</b><blink>Bob is very special!</blink>"
+    
+    [<Test>] member test.
+     ``when a customer is not special, the block is ignored.`` ()=
+       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = false} 
+        |> should equal "Hello <b>Bob</b>"
