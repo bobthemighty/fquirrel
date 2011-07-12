@@ -1,5 +1,7 @@
 Fquirrel - a server-side jquery-tmpl in F#
 
+This is in no way intended to be performant, error-free, or usable. It's just a way for me to mess about with F#
+
 Roadmap
   * Support hello world example
   * Support html

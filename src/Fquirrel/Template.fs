@@ -1,22 +1,28 @@
 ﻿namespace Fquirrel
 
+module AST =
+
+
+    type parsedTemplate =   Expr of string
+                            | Literal of string
+                            | Html of string
+                            | If of condBlock
+    and condBlock = {expression: string; body: parsedTemplate}
+
 module Template =
     open System
     open System.IO
     open FParsec
+    open AST
+    
 
+    let tValue, tValueRef = createParserForwardedToRef()    
 
-    [<StructuredFormatDisplay("{StructuredFormatDisplay}")>]
-    type parsedTemplate =   Expr of string
-                            | Literal of string
-                            | Html of string
-     
+   
 
     type UserState = unit
     type Parser<'t> = Parser<'t, UserState>
     
-
-
     let ws = spaces
     let str s = pstring s
 
@@ -32,6 +38,7 @@ module Template =
     
     let expr = (identifier |> betweenStrings "${" "}") |>> Expr
     let normalChar : Parser<_> = satisfy(fun c -> c <> '$' && c <> '{')
+    let any : Parser<_> = satisfy(fun c -> true)
         
     let literal : Parser<_> = 
         (many1Chars normalChar) |>> Literal
@@ -39,4 +46,19 @@ module Template =
     let htmlFrag : Parser<_> =
         (identifier |> betweenStrings "{{html " "}}") |>> Html
 
-    let template =     many1 (htmlFrag <|> expr <|> literal)
+    let ifBlock : Parser<_> =
+        pipe2   (identifier |> betweenStrings "{{if " "}}")
+                (tValue .>> str "{{/if}}")
+                
+                (fun x y -> {expression = x; body = y}|> If)
+
+    do tValueRef := choice [expr
+                            ifBlock
+                            htmlFrag
+                            literal
+                            ]
+
+
+   
+
+    let template =     many1 (htmlFrag <|> expr <|>  ifBlock <|>literal)

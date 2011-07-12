@@ -7,7 +7,7 @@ open FsUnit
 open Fquirrel.Template
 open Fquirrel.Parser
 
-type Customer = {name: string; htmlText : string}
+type Customer = {name: string; htmlText : string; isSpecial : bool}
     
 [<TestFixture>]
 type ``Given a literal fragment`` ()=
@@ -24,7 +24,7 @@ type ``Given a template that contains a variable`` ()=
 
     [<Test>] member test.
      ``the variable is correctly output.`` ()=
-       (parse template) {name= "Bob"; htmlText = ""} 
+       (parse template) {name= "Bob"; htmlText = ""; isSpecial = false} 
         |> should equal "Hello Bob! welcome to a working example."
         
 
@@ -34,7 +34,7 @@ type ``Given a template that contains unescaped html`` ()=
 
     [<Test>] member test.
      ``the variable is correctly output.`` ()=
-       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"} 
+       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = false} 
         |> should equal "Hello <p>O HAI!</p>"
 
 [<TestFixture>]
@@ -43,5 +43,23 @@ type ``Given a template that uses html in a normal variable`` ()=
 
      [<Test>] member test.
       ``the variable is html encoded`` ()=
-        (parse template) {name = ""; htmlText = "<p> Badgers & Things</p>"} 
+        (parse template) {name = ""; htmlText = "<p> Badgers & Things</p>"; isSpecial = false} 
         |> should equal "Hello &lt;p&gt; Badgers &amp; Things&lt;/p&gt;"
+
+
+[<TestFixture>]
+type ``Given a template that contains an if block`` ()=
+    let template = "Hello <b>${name}</b>\
+{{if isSpecial}}\
+ <blink>You are very special!</blink>\
+{{/if}}"
+
+    [<Test>] member test.
+     ``when a customer is special, the block is output.`` ()=
+       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = true} 
+        |> should equal "Hello <b>Bob</b><blink>You are very special!</blink>"
+    
+    [<Test>] member test.
+     ``when a customer is not special, the block is ignored.`` ()=
+       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = false} 
+        |> should equal "Hello <b>Bob</b>"
