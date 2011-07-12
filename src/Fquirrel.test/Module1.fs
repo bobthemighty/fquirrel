@@ -111,3 +111,18 @@ type ``Given an if block that contains an if block`` ()=
        (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = true; isSexy = false} 
        |> compress
        |> should equal "Hello <b>Bob</b>"
+
+
+[<TestFixture>]
+type ``Given an else with no condition`` ()=
+    let template = "{{if isSpecial}} Foo ${name} {{else}} Bar ${name} {{/if}}"
+     
+    [<Test>] member test.
+      ``when a customer is not special, the else is invoked.`` ()=
+        (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = false; isSexy = true} 
+        |> should equal " Bar Bob "
+
+    [<Test>] member test.
+      ``when a customer is special, the if is invoked.`` ()=
+        (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = true; isSexy = true} 
+        |> should equal " Foo Bob "

@@ -7,6 +7,8 @@ module AST =
                             | Literal of string
                             | Html of string
                             | If of condBlock
+                            | Else of condBlock
+
     and condBlock = {expression: string; body: parsedTemplate list}
 
 module Template =
@@ -26,12 +28,14 @@ module Template =
     let ws = spaces
     let str s = pstring s
 
+    let isIdentifierFirstChar c = isLetter c || c = '_'
+    let isIdentifierChar c = isLetter c || isDigit c || c = '_'
+    
     let identifier : Parser<_> =
-        let isIdentifierFirstChar c = isLetter c || c = '_'
-        let isIdentifierChar c = isLetter c || isDigit c || c = '_'
-
         many1Satisfy2L isIdentifierFirstChar isIdentifierChar "identifier" .>> ws // skips trailing whitepace
 
+    let optionalIdentifier: Parser<_> =
+        manySatisfy2 isIdentifierFirstChar isIdentifierChar  .>> ws // skips trailing whitepace
 
 
     let betweenStrings s1 s2 p = str s1 >>. p .>> str s2
@@ -52,8 +56,14 @@ module Template =
                 
                 (fun x y -> {expression = x; body = y}|> If)
 
+    let elseBlock : Parser<_> = 
+        pipe2 (ws >>. optionalIdentifier |> betweenStrings "{{else" "}}") 
+              (template)
+              (fun x y -> {expression = x; body = y}|> Else)
+
     do tValueRef := choice [expr
                             ifBlock
+                            elseBlock
                             htmlFrag
                             literal
                             ]
