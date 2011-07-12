@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Fquirrel", "Fquirrel.fsproj", "{8C78906A-AF19-45B4-9451-F27662EC2F62}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Fquirrel", "src\Fquirrel\Fquirrel.fsproj", "{8C78906A-AF19-45B4-9451-F27662EC2F62}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Fquirrel.test", "..\Fquirrel.test\Fquirrel.test.fsproj", "{95290A18-FEC7-4926-B9FC-1E0A32CBA3C3}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Fquirrel.test", "src\Fquirrel.test\Fquirrel.test.fsproj", "{705D3BEC-F694-4E2E-97B3-9172B27CD3E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,10 @@ Global
 		{8C78906A-AF19-45B4-9451-F27662EC2F62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C78906A-AF19-45B4-9451-F27662EC2F62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C78906A-AF19-45B4-9451-F27662EC2F62}.Release|Any CPU.Build.0 = Release|Any CPU
-		{95290A18-FEC7-4926-B9FC-1E0A32CBA3C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{95290A18-FEC7-4926-B9FC-1E0A32CBA3C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{95290A18-FEC7-4926-B9FC-1E0A32CBA3C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{95290A18-FEC7-4926-B9FC-1E0A32CBA3C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{705D3BEC-F694-4E2E-97B3-9172B27CD3E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{705D3BEC-F694-4E2E-97B3-9172B27CD3E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{705D3BEC-F694-4E2E-97B3-9172B27CD3E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{705D3BEC-F694-4E2E-97B3-9172B27CD3E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

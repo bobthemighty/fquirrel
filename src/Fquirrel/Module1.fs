@@ -2,3 +2,6 @@
 
 module Module1
 
+type literal =
+    | String of string
+
