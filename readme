@@ -1,6 +1,13 @@
 Fquirrel - a server-side jquery-tmpl in F#
 
+As part of an ongoing project at Huddle, I'm investigating whether we can generate HTML on the server side from JQuery templates.
+Obviously, that's fraught with danger since jquery-tmpl allows you to have arbitrary javascript in expressions, but this is a toy library to see how far I can get.
+
 This is in no way intended to be performant, error-free, or usable. It's just a way for me to mess about with F#
+
+Any and all code in here is under CC license http://creativecommons.org/licenses/by/3.0/
+
+This library is dependent on NUnit, FSUnit, and FParsec, all of which are separately licensed and warranted
 
 Roadmap
   * Support hello world example
