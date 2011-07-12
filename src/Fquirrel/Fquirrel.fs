@@ -4,6 +4,7 @@
 
         open Template
         open FParsec
+        open System.Web
 
         let (?) o n : 'T =  
             printfn "Requested property name for get'%s'" n
@@ -11,13 +12,14 @@
             downcast prop.GetValue(o, null)
 
 
-        let Template foo d =
+        let Template foo data =
             foo |>             
                     (List.map(fun(p) ->
                             match p with
-                            | Expr s -> d?(s)
-                            | Literal s -> s )
-
+                            | Expr s -> HttpUtility.HtmlEncode(data?(s))
+                            | Literal s -> s 
+                            | Html s -> data?(s)
+                    )
                     >> List.fold( fun acc x -> acc + x) "")
                     
 

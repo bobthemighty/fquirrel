@@ -7,7 +7,7 @@ open FsUnit
 open Fquirrel.Template
 open Fquirrel.Parser
 
-type Customer = {name: string}
+type Customer = {name: string; htmlText : string}
     
 [<TestFixture>]
 type ``Given a literal fragment`` ()=
@@ -24,17 +24,24 @@ type ``Given a template that contains a variable`` ()=
 
     [<Test>] member test.
      ``the variable is correctly output.`` ()=
-       (parse template) {name= "Bob"} |> should equal "Hello Bob! welcome to a working example."
+       (parse template) {name= "Bob"; htmlText = ""} 
+        |> should equal "Hello Bob! welcome to a working example."
         
 
-
-(*
 [<TestFixture>]
-type ``Given a template that contains literals and variables`` ()=
-    let template = "Hello ${name}!"
+type ``Given a template that contains unescaped html`` ()=
+    let template = "Hello {{html htmlText}}"
 
     [<Test>] member test.
-     ``when I evaluate the template for html, I receive a function.`` ()=
-        printf "%A" (parse template)
+     ``the variable is correctly output.`` ()=
+       (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"} 
+        |> should equal "Hello <p>O HAI!</p>"
 
-*)
+[<TestFixture>]
+type ``Given a template that uses html in a normal variable`` ()=
+     let template = "Hello ${htmlText}"
+
+     [<Test>] member test.
+      ``the variable is html encoded`` ()=
+        (parse template) {name = ""; htmlText = "<p> Badgers & Things</p>"} 
+        |> should equal "Hello &lt;p&gt; Badgers &amp; Things&lt;/p&gt;"

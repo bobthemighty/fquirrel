@@ -9,6 +9,7 @@ module Template =
     [<StructuredFormatDisplay("{StructuredFormatDisplay}")>]
     type parsedTemplate =   Expr of string
                             | Literal of string
+                            | Html of string
      
 
     type UserState = unit
@@ -30,9 +31,12 @@ module Template =
     let betweenStrings s1 s2 p = str s1 >>. p .>> str s2
     
     let expr = (identifier |> betweenStrings "${" "}") |>> Expr
-    let normalChar : Parser<_> = satisfy(fun c -> c <> '$')
-    
+    let normalChar : Parser<_> = satisfy(fun c -> c <> '$' && c <> '{')
+        
     let literal : Parser<_> = 
         (many1Chars normalChar) |>> Literal
 
-    let template =     many1 (literal <|> expr)
+    let htmlFrag : Parser<_> =
+        (identifier |> betweenStrings "{{html " "}}") |>> Html
+
+    let template =     many1 (htmlFrag <|> expr <|> literal)
