@@ -126,3 +126,33 @@ type ``Given an else with no condition`` ()=
       ``when a customer is special, the if is invoked.`` ()=
         (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = true; isSexy = true} 
         |> should equal " Foo Bob "
+
+
+[<TestFixture>]
+type ``Given an else containing an if`` ()=
+     let template = "Hello <b>${name}</b>\
+{{if isSpecial}}\
+ You are special
+ {{else isSexy}}
+<blink>That's pretty sexy, ${name}</blink>
+ {{else}}
+ I have no time for you, ${name}
+{{/if}}"
+     
+     [<Test>] member test.
+      ``when a customer is special, the if is invoked.`` ()=
+        (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = true; isSexy = true} 
+        |> compress
+        |> should equal "Hello <b>Bob</b>You are special "
+
+     [<Test>] member test.
+      ``when a customer is not special, but is sexy, the first else is invoked.`` ()=
+        (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = false; isSexy = true} 
+        |> compress
+        |> should equal "Hello <b>Bob</b><blink>That's pretty sexy, Bob</blink> "
+
+     [<Test>] member test.
+      ``when a customer is neither sexy nor special, the second else is invoked.`` ()=
+        (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = false; isSexy = false} 
+        |> compress
+        |> should equal "Hello <b>Bob</b>I have no time for you, Bob"

@@ -20,8 +20,9 @@
                 | If cb -> 
                         let e = List.tryPick (function | Else e -> Some(e) |_ -> None) cb.body
                         match e with
-                        | Some x -> Template e.Value.body data
-                        | None -> ""
+                        | Some x when x.expression = "" -> Template e.Value.body data
+                        | Some x when data?(x.expression) -> Template e.Value.body data
+                        | _ -> ""
                 | _ -> ""
 
             foo |>             

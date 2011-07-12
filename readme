@@ -10,10 +10,10 @@ Any and all code in here is under CC license http://creativecommons.org/licenses
 This library is dependent on NUnit, FSUnit, and FParsec, all of which are separately licensed and warranted
 
 Roadmap
-  * Support hello world example
-  * Support html
-  * Support if
-  * Support else
+  * -Support hello world example-
+  * -Support html-
+  * -Support if-
+  * -Support else-
   * Support each
   * Alpha
   * Support Localisable strings
