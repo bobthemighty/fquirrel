@@ -5,7 +5,7 @@ Obviously, that's fraught with danger since jquery-tmpl allows you to have arbit
 
 This is in no way intended to be performant, error-free, or usable. It's just a way for me to mess about with F#
 
-Any and all code in here is under CC license http://creativecommons.org/licenses/by/3.0/
+Any and all code in here is public domain as per http://creativecommons.org/publicdomain/zero/1.0/
 
 This library is dependent on NUnit, FSUnit, and FParsec, all of which are separately licensed and warranted
 
