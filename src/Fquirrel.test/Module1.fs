@@ -155,4 +155,4 @@ type ``Given an else containing an if`` ()=
       ``when a customer is neither sexy nor special, the second else is invoked.`` ()=
         (parse template) {name= "Bob"; htmlText = "<p>O HAI!</p>"; isSpecial = false; isSexy = false} 
         |> compress
-        |> should equal "Hello <b>Bob</b>I have no time for you, Bob"
+        |> should equal "Hello <b>Bob</b> I have no time for you, Bob"

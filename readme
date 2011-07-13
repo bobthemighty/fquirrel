@@ -15,9 +15,12 @@ Roadmap
   * -Support if-
   * -Support else-
   * Support each
-  * Alpha
   * Support Localisable strings
+  * Expression parsing
+  ** Simple accessors
+  ** Falsy and Truthy values
+  ** Method calls
+  ** Numeric expressions
+  ** Dates and times
   * Implement template output
-  * Beta
-  * Support method calls
   * Support tmpl

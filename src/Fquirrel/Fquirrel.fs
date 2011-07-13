@@ -18,10 +18,12 @@
                 match p with
                 | If cb when data?(cb.expression) -> Template cb.body data
                 | If cb -> 
-                        let e = List.tryPick (function | Else e -> Some(e) |_ -> None) cb.body
+                        let e = List.tryPick (function 
+                                                | Else e when e.expression = "" -> Some(e) 
+                                                | Else e when data?(e.expression) -> Some e
+                                                |_ -> None) cb.body
                         match e with
-                        | Some x when x.expression = "" -> Template e.Value.body data
-                        | Some x when data?(x.expression) -> Template e.Value.body data
+                        | Some x  -> Template e.Value.body data
                         | _ -> ""
                 | _ -> ""
 

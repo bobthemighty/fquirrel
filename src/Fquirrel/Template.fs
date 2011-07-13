@@ -58,7 +58,7 @@ module Template =
 
     let elseBlock : Parser<_> = 
         pipe2 (ws >>. optionalIdentifier |> betweenStrings "{{else" "}}") 
-              (template)
+              (many1Till tValue (followedBy (str "{{else" <|> str "{{/if")))
               (fun x y -> {expression = x; body = y}|> Else)
 
     do tValueRef := choice [expr
